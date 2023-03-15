@@ -1,0 +1,10 @@
+.wrapper {
+  &[data-decoration-type="bold"] {
+    font-weight: bold;
+  }
+
+  &[data-decoration-type="italic"] {
+    font-style: italic;
+  }
+
+}

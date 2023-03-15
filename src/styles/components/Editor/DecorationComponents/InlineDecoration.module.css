@@ -1,0 +1,8 @@
+.wrapper[data-decoration-type=bold] {
+  font-weight: bold;
+}
+.wrapper[data-decoration-type=italic] {
+  font-style: italic;
+}
+
+/*# sourceMappingURL=InlineDecoration.module.css.map */

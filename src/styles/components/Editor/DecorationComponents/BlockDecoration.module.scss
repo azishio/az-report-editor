@@ -1,0 +1,7 @@
+.wrapper {
+  margin-left: attr(data-indent-lv em);
+
+  &[data-decoration-category="header"] {
+    font-size: 11pt;
+  }
+}

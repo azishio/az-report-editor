@@ -1,8 +1,0 @@
-.wrapper {
-  margin-left: attr(data-indent-lv em);
-}
-.wrapper[data-decoration-category=header] {
-  font-size: 11pt;
-}
-
-/*# sourceMappingURL=BlockDecoration.module.css.map */

@@ -1,3 +1,3 @@
-export const Header = () => {
+export function Header() {
   return <div>hello header</div>;
-};
+}

@@ -1,0 +1,8 @@
+@import "../../../mixin.scss";
+
+.wrapper {
+
+  @include listIndent;
+  
+  color: green;
+}

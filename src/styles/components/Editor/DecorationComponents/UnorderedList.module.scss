@@ -1,0 +1,28 @@
+@import "../../../mixin.scss";
+
+.wrapper {
+  color: orange;
+
+ @include listIndent;
+
+
+  &[data-display-type="print"] {
+
+    .bullet {
+      &::before {
+        content: attr(data-bullet);
+      }
+    }
+
+    .content {
+      &::before {
+        content: attr(data-content-text);
+      }
+    }
+
+    .children {
+      @include hide;
+    }
+  }
+}
+

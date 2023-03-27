@@ -1,0 +1,21 @@
+.wrapper {
+  &[data-indent-lv="0"] {
+    margin-left: 0;
+  }
+
+  &[data-indent-lv="1"] {
+    margin-left: 1em;
+  }
+
+  &[data-indent-lv="2"] {
+    margin-left: 2em;
+  }
+
+  &[data-indent-lv="3"] {
+    margin-left: 3em;
+  }
+
+  &[data-indent-lv="4"] {
+    margin-left: 4em;
+  }
+}

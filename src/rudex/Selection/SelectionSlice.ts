@@ -6,30 +6,33 @@ type MySelectionState = {
   startOffset: number;
   endKey: string;
   endOffset: number;
-  focusBlockKey: string;
+  focusBlockKey: Set<string>;
 };
 
 const initialState: MySelectionState = {
-  startKey: "",
-  startOffset: 0,
   endKey: "",
   endOffset: 0,
-  focusBlockKey: "",
+  focusBlockKey: new Set(),
+  startKey: "",
+  startOffset: 0,
 };
 export const selectionSlice = createSlice({
-  name: "selection",
   initialState,
+  name: "selection",
   reducers: {
-    setSelection: (state, action: PayloadAction<SelectionState>) => {
-      state.startKey = action.payload.getStartKey();
-      state.startOffset = action.payload.getStartOffset();
-      state.endKey = action.payload.getEndKey();
-      state.endOffset = action.payload.getEndOffset();
+    setSelection: (
+      state,
+      action: PayloadAction<{ selectionState: SelectionState; blockArr: string[] }>
+    ) => {
+      const { selectionState, blockArr } = action.payload;
+      state.startKey = selectionState.getStartKey();
+      state.startOffset = selectionState.getStartOffset();
+      state.endKey = selectionState.getEndKey();
+      state.endOffset = selectionState.getEndOffset();
 
-      if (state.startKey === state.endKey) {
-        state.focusBlockKey = state.startKey;
-      } else {
-        state.focusBlockKey = "";
+      state.focusBlockKey.clear();
+      for (let i = blockArr.indexOf(state.startKey); i <= blockArr.indexOf(state.endKey); i++) {
+        state.focusBlockKey.add(blockArr[i]);
       }
     },
   },

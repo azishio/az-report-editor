@@ -1,10 +1,17 @@
 .wrapper {
-  &[data-decoration-type="bold"] {
+  &[data-decoration-name="bold"] {
     font-weight: bold;
   }
 
-  &[data-decoration-type="italic"] {
+  &[data-decoration-name="italic"] {
     font-style: italic;
   }
 
+  &[deta-decoration-name="superscript"] {
+    vertical-align: super;
+  }
+
+  &[deta-decoration-name="subscript"] {
+    vertical-align: sub;;
+  }
 }

@@ -11,6 +11,29 @@
   "rules": {
     "no-plusplus": 0,
     "jsx-props-no-spreading": 0,
-    "no-console": 1
-  }
+    "no-console": 1,
+    "react/jsx-props-no-spreading": 0,
+    "import/prefer-default-export": 0,
+    "no-param-reassign": 0,
+    // 並び替え系
+    "sort-keys-fix/sort-keys-fix": 1,
+    "sort-destructure-keys/sort-destructure-keys": 1,
+    "react/jsx-sort-props": [
+      1,
+      {
+        "callbacksLast": false,
+        "shorthandFirst": true,
+        "ignoreCase": false,
+        "noSortAlphabetically": false,
+        "reservedFirst": true
+      }
+    ],
+    "typescript-sort-keys/interface": 1,
+    "typescript-sort-keys/string-enum": 1
+  },
+  "plugins": [
+    "typescript-sort-keys",
+    "sort-keys-fix",
+    "sort-destructure-keys"
+  ]
 }

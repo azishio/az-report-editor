@@ -1,8 +1,14 @@
-.wrapper[data-decoration-type=bold] {
+.wrapper[data-decoration-name=bold] {
   font-weight: bold;
 }
-.wrapper[data-decoration-type=italic] {
+.wrapper[data-decoration-name=italic] {
   font-style: italic;
+}
+.wrapper[deta-decoration-name=superscript] {
+  vertical-align: super;
+}
+.wrapper[deta-decoration-name=subscript] {
+  vertical-align: sub;
 }
 
 /*# sourceMappingURL=InlineDecoration.module.css.map */

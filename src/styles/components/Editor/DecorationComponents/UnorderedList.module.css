@@ -1,0 +1,35 @@
+.wrapper {
+  color: orange;
+}
+.wrapper[data-indent-depth=none] {
+  margin-left: 0;
+}
+.wrapper[data-indent-depth="0"] {
+  margin-left: 0.5em;
+}
+.wrapper[data-indent-depth="1"] {
+  margin-left: 1.5em;
+}
+.wrapper[data-indent-depth="2"] {
+  margin-left: 2.5em;
+}
+.wrapper[data-indent-depth="3"] {
+  margin-left: 3.5em;
+}
+.wrapper[data-indent-depth="4"] {
+  margin-left: 4.5em;
+}
+.wrapper[data-display-type=print] .bullet::before {
+  content: attr(data-bullet);
+}
+.wrapper[data-display-type=print] .content::before {
+  content: attr(data-content-text);
+}
+.wrapper[data-display-type=print] .children {
+  display: inline-block;
+  overflow: clip;
+  width: 0;
+  white-space: nowrap;
+}
+
+/*# sourceMappingURL=UnorderedList.module.css.map */

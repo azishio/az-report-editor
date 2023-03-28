@@ -1,12 +1,12 @@
 import { convertToRaw, Editor, EditorState } from "draft-js";
-import "draft-js/dist/Draft.css";
 import { useEffect, useState } from "react";
 import styles from "src/styles/components/Editor/ReportEditor.module.css";
 import { useDispatch } from "react-redux";
 import { compoundDecorator } from "@/components/Editor/compoundDecorator";
-import { cleanUp, runningCounters } from "@/rudex/Block/BlockSlice";
+import { cleanUp, clearChanges, runningCounters } from "@/rudex/Block/BlockSlice";
 import { setSelection } from "@/rudex/Selection/SelectionSlice";
-import { blockRenderMap, myBlockRender } from "@/components/Editor/customBlock";
+import { extendedBlockRenderMap, myBlockRender } from "@/components/Editor/customBlock";
+import { setBlockType } from "@/components/Functions/setBlockType";
 
 export default function ReportEditor() {
   const dispatch = useDispatch();
@@ -16,7 +16,6 @@ export default function ReportEditor() {
   useEffect(() => {
     const blockArr = convertToRaw(editorState.getCurrentContent()).blocks.map(v => v.key);
     const blockSet = new Set(blockArr);
-
     dispatch(cleanUp(blockSet));
     dispatch(
       setSelection({
@@ -25,18 +24,22 @@ export default function ReportEditor() {
       })
     );
     dispatch(runningCounters(blockSet));
-    //  dispatch(clearChanges());
+    dispatch(clearChanges());
   });
+
+  const onChange = (state: EditorState) => {
+    setEditorState(setBlockType(state));
+  };
 
   return (
     <div>
       <div className={styles.commonEditorStyle}>
         <Editor
           stripPastedStyles
-          blockRenderMap={blockRenderMap}
+          blockRenderMap={extendedBlockRenderMap}
           blockRendererFn={myBlockRender}
           editorState={editorState}
-          onChange={setEditorState}
+          onChange={onChange}
           placeholder="Your report here!"
         />
       </div>

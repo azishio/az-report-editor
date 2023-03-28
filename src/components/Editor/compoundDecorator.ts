@@ -6,11 +6,7 @@ import {
 } from "@azishio/draft-compound-decorator/dist/types";
 import CompoundDecorator from "@azishio/draft-compound-decorator";
 import { InlineDecoration } from "@/components/Editor/DecorationComponents/InlineDecoration";
-import { Header } from "@/components/Editor/DecorationComponents/Header";
 import { SetAlias } from "@/components/Editor/DecorationComponents/SetAlias";
-import { Undecorated } from "@/components/Editor/DecorationComponents/Undecorated";
-import { UnorderedList } from "@/components/Editor/DecorationComponents/UnorderedList";
-import { OrderedList } from "@/components/Editor/DecorationComponents/OrderedList";
 import { store } from "@/rudex/store";
 import { setDecorationMap } from "@/rudex/Block/BlockSlice";
 import { GetAlias } from "@/components/Editor/DecorationComponents/GetAlias";
@@ -24,31 +20,7 @@ const decorationRule: { component: Function; option: AzDecoratorOption; regex: R
     option: { name: "escape" },
     regex: /\\./gu,
   },
-  {
-    component: Header,
-    option: { name: "header-five" },
-    regex: /^#{5} .*$/gu,
-  },
-  {
-    component: Header,
-    option: { name: "header-four" },
-    regex: /^#{4} .*$/gu,
-  },
-  {
-    component: Header,
-    option: { name: "header-three" },
-    regex: /^#{3} .*$/gu,
-  },
-  {
-    component: Header,
-    option: { name: "header-two" },
-    regex: /^#{2} .*$/gu,
-  },
-  {
-    component: Header,
-    option: { name: "header-one" },
-    regex: /^# .*$/gu,
-  },
+
   {
     component: SetAlias,
     option: {
@@ -90,85 +62,9 @@ const decorationRule: { component: Function; option: AzDecoratorOption; regex: R
     regex: /\[.*\]/gu,
   },
   {
-    component: UnorderedList,
-    option: { name: "unordered-list-five" },
-    regex: /^\+ {5}[^ ].*$/gu,
-  },
-  {
-    component: UnorderedList,
-    option: { name: "unordered-list-four" },
-    regex: /^\+ {4}[^ ].*$/gu,
-  },
-  {
-    component: UnorderedList,
-    option: { name: "unordered-list-three" },
-    regex: /^\+ {3}[^ ].*$/gu,
-  },
-  {
-    component: UnorderedList,
-    option: { name: "unordered-list-two" },
-    regex: /^\+ {2}[^ ].*$/gu,
-  },
-  {
-    component: UnorderedList,
-    option: { name: "unordered-list-one" },
-    regex: /^\+ [^ ].*$/gu,
-  },
-  {
-    component: OrderedList,
-    option: { name: "ordered-list-five" },
-    regex: /^\d {5}[^ ].*$/gu,
-  },
-  {
-    component: OrderedList,
-    option: { name: "ordered-list-four" },
-    regex: /^\d {4}[^ ].*$/gu,
-  },
-  {
-    component: OrderedList,
-    option: { name: "ordered-list-three" },
-    regex: /^\d {3}[^ ].*$/gu,
-  },
-  {
-    component: OrderedList,
-    option: { name: "ordered-list-two" },
-    regex: /^\d {2}[^ ].*$/gu,
-  },
-  {
-    component: OrderedList,
-    option: { name: "ordered-list-one" },
-    regex: /^\d [^ ].*$/gu,
-  },
-  {
     component: ListChild,
     option: { name: "listChild" },
     regex: /^: .*$/gu,
-  },
-  {
-    // これより下にblockDecorationを設定しないこと。
-    component: Undecorated,
-    option: {
-      dislikedName: [
-        "header-one",
-        "header-two",
-        "header-three",
-        "header-four",
-        "header-five",
-        "unordered-list-one",
-        "unordered-list-two",
-        "unordered-list-three",
-        "unordered-list-four",
-        "unordered-list-five",
-        "ordered-list-one",
-        "ordered-list-two",
-        "ordered-list-three",
-        "ordered-list-four",
-        "ordered-list-five",
-      ],
-      name: "undecorated",
-      notJudging: true,
-    },
-    regex: /^.*$/gu,
   },
   {
     component: GetAlias,

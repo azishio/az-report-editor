@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DecoratorRange } from "@azishio/draft-compound-decorator/dist/types";
 
@@ -19,7 +20,6 @@ export type BlockState = {
     needlessTopSpace: Set<string>; // 上の行間をを1行にする
   };
   indentByHeader: Map<string, number>;
-  indentByList: Map<string, number>;
 };
 
 const initialState: BlockState = {
@@ -41,7 +41,6 @@ const initialState: BlockState = {
     needlessTopSpace: new Set(),
   },
   indentByHeader: new Map(),
-  indentByList: new Map(),
 };
 
 // reducers内で使用
@@ -64,16 +63,6 @@ const orderedListType = [
   "ordered-list-two",
 ] as const;
 const isOrderedList = (blockType: string): blockType is (typeof orderedListType)[number] =>
-  (<readonly string[]>orderedListType).includes(blockType);
-
-const unOrderedListType = [
-  "unordered-list-five",
-  "unordered-list-four",
-  "unordered-list-one",
-  "unordered-list-three",
-  "unordered-list-two",
-] as const;
-const isUnOrderedList = (blockType: string): blockType is (typeof orderedListType)[number] =>
   (<readonly string[]>orderedListType).includes(blockType);
 
 const indentLv = {
@@ -157,8 +146,8 @@ export const blockSlice = createSlice({
     cleanUp: (state, action: PayloadAction<Set<string>>) => {
       const blockSet = action.payload;
       const { size } = blockSet;
-      const { changes, decorationMap, indentByHeader, indentByList } = state;
-      const { beforeBlockNum, deleteBlock } = changes;
+      const { changes, decorationMap, indentByHeader } = state;
+      const { beforeBlockNum } = changes;
       // 存在しないkeyの情報を削除
       if (beforeBlockNum > size) {
         changes.beforeBlockNum = size;
@@ -175,18 +164,6 @@ export const blockSlice = createSlice({
           }
         });
       }
-
-      if (
-        orderedListType.some(v => deleteBlock.has(v)) ||
-        unOrderedListType.some(v => deleteBlock.has(v)) ||
-        deleteBlock.has("listChild")
-      ) {
-        indentByList.forEach((v, k) => {
-          if (!blockSet.has(k)) {
-            indentByList.delete(k);
-          }
-        });
-      }
     },
 
     clearChanges: state => {
@@ -197,7 +174,7 @@ export const blockSlice = createSlice({
 
     runningCounters: (state, action: PayloadAction<Set<string>>) => {
       const blockSet = action.payload;
-      const { changes, decorationType, indentByHeader, indentByList } = state;
+      const { changes, decorationType, indentByHeader } = state;
       const { addBlock, deleteBlock } = changes;
 
       // headerのカウント,行間管理
@@ -244,41 +221,13 @@ export const blockSlice = createSlice({
 
         blockSet.forEach(blockKey => {
           const blockType = decorationType.get(blockKey)!;
-          let indent = 0;
 
           if (isOrderedList(blockType)) {
             counter.countUp(blockType);
             orderedList.set(blockKey, counter.getTo(blockType));
-
-            indent = indentLv[blockType];
-            indentByList.set(blockKey, indent);
-          } else if (blockType === "listChild") {
-            indentByList.set(blockKey, indent);
           } else {
             counter.reset();
-            indent = 0;
           }
-        });
-      }
-
-      // unorderedListのインデント
-      if (
-        unOrderedListType.some(v => addBlock.has(v) || deleteBlock.has(v)) ||
-        deleteBlock.has("listChild") ||
-        addBlock.has("listChild")
-      ) {
-        let indent = 0;
-        blockSet.forEach(blockKey => {
-          const blockType = decorationType.get(blockKey)!;
-          if (isUnOrderedList(blockType)) {
-            indent = indentLv[blockType];
-            indentByList.set(blockKey, indent);
-          } else if (blockType === "listChild") {
-            indentByList.set(blockKey, indent);
-          } else {
-            indent = 0;
-          }
-          indentByHeader.set(blockKey, indent);
         });
       }
 

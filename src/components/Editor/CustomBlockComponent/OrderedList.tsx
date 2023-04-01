@@ -14,7 +14,7 @@ import {
 } from "@/components/Editor/CustomBlockComponent/common.styled";
 
 export function OrderedList(props: CustomBlockProps) {
-  const { block, forceSelection } = props;
+  const { block } = props;
   const { blockKey, depth } = getBlockValue(block);
   const dispatch = useAppDispatch();
 

@@ -37,7 +37,7 @@ export function GetAlias(props: DecoratorPropsType) {
     }
   })();
 
-  const hasFocused = useAppSelector(state => state.selection.focusBlockKey.has(blockKey));
+  const hasFocused = useAppSelector(state => state.selection.isFocusBlock(blockKey));
 
   const aliasedBlockKey = useAppSelector(
     state =>

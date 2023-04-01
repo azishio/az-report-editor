@@ -1,15 +1,21 @@
-import styles from "src/styles/components/Editor/CustomBlockComponents/OrderedList.module.css";
-import { ContentBlock, EditorBlock } from "draft-js";
+import { EditorBlock } from "draft-js";
 import { useAppDispatch, useAppSelector } from "@/rudex/store";
 import { setBlockType } from "@/rudex/Block/BlockSlice";
-import { useEffect } from "react";
 import { depthMap } from "@/components/Editor/CustomBlockComponent/commonObj";
+import { CustomBlockProps } from "@/components/Editor/CustomBlockComponent/commonType";
+import {
+  DEFAULT_LIST_INDENT,
+  ORDERED_LIST_COUNTER_END,
+} from "@/components/Editor/commonEditorValue";
+import { getBlockValue } from "@/components/Functions/getBlockValue";
+import {
+  DIV_CommonBlockStyle,
+  SPAN_InFocusPseudoElements,
+} from "@/components/Editor/CustomBlockComponent/common.styled";
 
-export function OrderedList(props: { block: ContentBlock }) {
-  const { block } = props;
-  const blockKey = block.getKey();
-  const depth = block.getDepth() as keyof typeof depthMap;
-  const text = block.getText();
+export function OrderedList(props: CustomBlockProps) {
+  const { block, forceSelection } = props;
+  const { blockKey, depth } = getBlockValue(block);
   const dispatch = useAppDispatch();
 
   dispatch(
@@ -19,23 +25,20 @@ export function OrderedList(props: { block: ContentBlock }) {
     })
   );
 
-  const focused = false;
-  const num = useAppSelector(state => state.block.counter.orderedList.get(blockKey));
-  const { content } = /^\d\. +(?<content>.*)/.exec(text)!.groups!;
-  const indent = `${depth}em`;
+  const focused = useAppSelector(state => state.selection.isFocusBlock(blockKey));
+  const indentByHeader = useAppSelector(state => state.block.indentByHeader.get(blockKey));
 
-  useEffect(() => {});
+  const indentByList = depth + DEFAULT_LIST_INDENT;
+  const indent = indentByList + indentByHeader!;
+
+  const num = `${useAppSelector(state =>
+    state.block.counter.orderedList.get(blockKey)
+  )}${ORDERED_LIST_COUNTER_END}`;
 
   return (
-    <div
-      className={styles.wrapper}
-      data-component-type="OrderedList"
-      data-focused={focused}
-      style={{ marginLeft: indent }}
-    >
-      <span className={styles.num} data-count-num={num} />
+    <DIV_CommonBlockStyle indent={indent}>
+      <SPAN_InFocusPseudoElements focused={focused} unfocusedContent={num} />
       <EditorBlock {...props} />
-      <span className={styles.content} data-content-text={content} />
-    </div>
+    </DIV_CommonBlockStyle>
   );
 }

@@ -4,29 +4,3 @@
   width: 0;
   white-space: nowrap;
 }
-
-@mixin listIndent{
-  &[data-indent-depth="none"] {
-    margin-left: 0;
-  }
-
-  &[data-indent-depth="0"] {
-    margin-left: 0.5em;
-  }
-
-  &[data-indent-depth="1"] {
-    margin-left: 1.5em;
-  }
-
-  &[data-indent-depth="2"] {
-    margin-left: 2.5em;
-  }
-
-  &[data-indent-depth="3"] {
-    margin-left: 3.5em;
-  }
-
-  &[data-indent-depth="4"] {
-    margin-left: 4.5em;
-  }
-}

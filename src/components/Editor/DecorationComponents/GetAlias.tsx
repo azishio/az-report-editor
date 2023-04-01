@@ -9,12 +9,7 @@ const aliasType = {
 } as const;
 
 export function GetAlias(props: DecoratorPropsType) {
-  const {
-          children,
-          decorationName,
-          decoratedText,
-          blockKey
-        } = props;
+  const { blockKey, children, decoratedText, decorationName } = props;
   console.log(props);
 
   const alias = (() => {
@@ -42,7 +37,7 @@ export function GetAlias(props: DecoratorPropsType) {
     }
   })();
 
-  const hasFocused = useAppSelector(state => state.selection.focusBlockKey.has(blockKey))
+  const hasFocused = useAppSelector(state => state.selection.focusBlockKey.has(blockKey));
 
   const aliasedBlockKey = useAppSelector(
     state =>

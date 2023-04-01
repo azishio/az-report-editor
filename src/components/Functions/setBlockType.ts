@@ -11,8 +11,8 @@ const headerType = [
 
 const regex = {
   header: /^(?<lv>#{1,6}) .*$/u,
-  orderedList: /^\d\.(?<lv> +)/u,
-  unOrderedList: /^\+(?<lv> +)/u,
+  orderedList: /^\d\.(?<lv> {1,6})/u,
+  unOrderedList: /^\+(?<lv> {1,6})/u,
 };
 
 const getNewProps = (text: string) => {
@@ -46,6 +46,7 @@ const getNewProps = (text: string) => {
 
 export const setBlockType = (editorState: EditorState) => {
   const contentState = editorState.getCurrentContent();
+  const selection = editorState.getSelection();
   const { blocks } = convertToRaw(contentState);
   const blockMap = editorState.getCurrentContent().getBlockMap();
 
@@ -75,12 +76,11 @@ export const setBlockType = (editorState: EditorState) => {
     return newBlockMap.set(key, newBlock);
   }, blockMap);
 
-  const { push, set } = EditorState;
+  const { forceSelection, push, set } = EditorState;
   const stateNoUndo = set(editorState, { allowUndo: false });
-  const newEditorState = push(
-    stateNoUndo,
-    contentState.set("blockMap", newBlockMap) as ContentState,
-    "insert-fragment"
+  const newEditorState = forceSelection(
+    push(stateNoUndo, contentState.set("blockMap", newBlockMap) as ContentState, "insert-fragment"),
+    selection
   );
   return EditorState.set(newEditorState, { allowUndo: true });
 };

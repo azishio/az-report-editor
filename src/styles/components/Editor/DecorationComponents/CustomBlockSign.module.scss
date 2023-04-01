@@ -1,0 +1,7 @@
+@import "../../../_mixin";
+
+.wrapper {
+  &[data-focused="false"] {
+    display: none;
+  }
+}

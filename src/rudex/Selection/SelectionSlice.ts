@@ -1,38 +1,43 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SelectionState } from "draft-js";
+import { store } from "@/rudex/store";
 
 type MySelectionState = {
-  startKey: string;
-  startOffset: number;
-  endKey: string;
-  endOffset: number;
-  focusBlockKey: Set<string>;
+  focusDecorationId: Set<number>;
+  isFocusBlock: (key: string) => boolean;
 };
 
 const initialState: MySelectionState = {
-  endKey: "",
-  endOffset: 0,
-  focusBlockKey: new Set(),
-  startKey: "",
-  startOffset: 0,
+  focusDecorationId: new Set(),
+  isFocusBlock: () => false,
 };
 export const selectionSlice = createSlice({
   initialState,
   name: "selection",
   reducers: {
-    setSelection: (
-      state,
-      action: PayloadAction<{ selectionState: SelectionState; blockArr: string[] }>
-    ) => {
-      const { selectionState, blockArr } = action.payload;
-      state.startKey = selectionState.getStartKey();
-      state.startOffset = selectionState.getStartOffset();
-      state.endKey = selectionState.getEndKey();
-      state.endOffset = selectionState.getEndOffset();
+    setSelection: (state, action: PayloadAction<SelectionState>) => {
+      const selectionState = action.payload;
+      const focusKey = selectionState.getFocusKey();
 
-      state.focusBlockKey.clear();
-      for (let i = blockArr.indexOf(state.startKey); i <= blockArr.indexOf(state.endKey); i++) {
-        state.focusBlockKey.add(blockArr[i]);
+      state.isFocusBlock = (key: string) => focusKey === key;
+
+      const focusOffset = selectionState.getFocusOffset();
+
+      state.focusDecorationId.clear();
+
+      if (false) {
+        store
+          .getState()
+          .block.decorationMap.get(focusKey)!
+          .forEach(decorator =>
+            decorator.forEach(range => {
+              const { end, id, start } = range;
+
+              if (start <= focusOffset && focusOffset <= end) {
+                state.focusDecorationId.add(id);
+              }
+            })
+          );
       }
     },
   },

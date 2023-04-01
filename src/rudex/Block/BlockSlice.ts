@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DecoratorRange } from "@azishio/draft-compound-decorator/dist/types";
+import { HEADER_COUNTER_DELIMITER } from "@/components/Editor/commonEditorValue";
 
 type Category = "header" | "figure" | "table" | "orderedList";
 export type BlockState = {
@@ -15,10 +16,7 @@ export type BlockState = {
   decorationMap: Map<string, DecoratorRange[][]>;
   decorationType: Map<string, string>;
   // blockDecoratorで登録
-  headerSpacing: {
-    firstHeader: string;
-    needlessTopSpace: Set<string>; // 上の行間をを1行にする
-  };
+
   indentByHeader: Map<string, number>;
 };
 
@@ -36,10 +34,6 @@ const initialState: BlockState = {
   },
   decorationMap: new Map(),
   decorationType: new Map(),
-  headerSpacing: {
-    firstHeader: "",
-    needlessTopSpace: new Set(),
-  },
   indentByHeader: new Map(),
 };
 
@@ -118,11 +112,15 @@ class MultiCounter {
     const index = indentLv[type];
     return this.count
       .slice(0, index + 1)
-      .reduce((previousValue, currentValue) => `${previousValue}${currentValue.toString()}.`, "");
+      .reduce(
+        (previousValue, currentValue) =>
+          `${previousValue}${currentValue.toString()}${HEADER_COUNTER_DELIMITER}`,
+        ""
+      );
   }
 
   getTo(type: keyof typeof indentLv) {
-    return `${this.count[indentLv[type]]}.`;
+    return `${this.count[indentLv[type]]}`;
   }
 }
 
@@ -181,14 +179,8 @@ export const blockSlice = createSlice({
       // headerの更新が重いようであればレベルによって更新する範囲を書き分ける
       if (headerType.some(v => addBlock.has(v) || deleteBlock.has(v))) {
         const counter = new MultiCounter();
-        const { headerSpacing } = state;
         const { header } = state.counter;
         header.clear();
-
-        let beforeBlockKey = "BOF";
-        let beforeHeaderBlockKey = "";
-        const { needlessTopSpace } = headerSpacing;
-        needlessTopSpace.clear();
 
         blockSet.forEach(blockKey => {
           const blockType = decorationType.get(blockKey) as string;
@@ -196,16 +188,7 @@ export const blockSlice = createSlice({
             // カウント
             counter.countUp(blockType);
             header.set(blockKey, counter.getUpTo(blockType));
-
-            // 行間判定
-            if (beforeBlockKey === "BOF") {
-              headerSpacing.firstHeader = blockKey;
-            } else if (beforeBlockKey === beforeHeaderBlockKey) {
-              needlessTopSpace.add(blockKey);
-            }
-            beforeHeaderBlockKey = blockKey;
           }
-          beforeBlockKey = blockKey;
         });
       }
 
@@ -260,17 +243,15 @@ export const blockSlice = createSlice({
       }
 
       // headerによるインデントの決定
-      if (deleteBlock.size < addBlock.size) {
-        indentByHeader.clear();
-        let indent = 0;
-        blockSet.forEach(blockKey => {
-          const blockType = decorationType.get(blockKey)!;
-          if (isHeader(blockType)) {
-            indent = indentLv[blockType];
-          }
-          indentByHeader.set(blockKey, indent);
-        });
-      }
+      indentByHeader.clear();
+      let indent = 0;
+      blockSet.forEach(blockKey => {
+        const blockType = decorationType.get(blockKey)!;
+        if (isHeader(blockType)) {
+          indent = indentLv[blockType];
+        }
+        indentByHeader.set(blockKey, indent);
+      });
     },
 
     setBlockType: (state, action: PayloadAction<{ blockKey: string; decorationName: string }>) => {

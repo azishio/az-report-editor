@@ -29,7 +29,10 @@
       }
     ],
     "typescript-sort-keys/interface": 1,
-    "typescript-sort-keys/string-enum": 1
+    "typescript-sort-keys/string-enum": 1,
+    // 後で専用のルールを作る。
+    "react/jsx-pascal-case": 0,
+    "@typescript-eslint/naming-convention": 0
   },
   "plugins": [
     "typescript-sort-keys",

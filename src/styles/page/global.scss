@@ -1,6 +1,8 @@
 .DraftEditor-root {
   .public-DraftEditorPlaceholder-root {
     position: absolute;
+    pointer-events: none;
+    user-select: none;
     color: grey;
   }
 }

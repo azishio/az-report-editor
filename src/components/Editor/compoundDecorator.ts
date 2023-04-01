@@ -13,6 +13,7 @@ import { GetAlias } from "@/components/Editor/DecorationComponents/GetAlias";
 import { Figure } from "@/components/Editor/DecorationComponents/Figure";
 import { Table } from "@/components/Editor/DecorationComponents/Table";
 import { ListChild } from "@/components/Editor/DecorationComponents/ListChild";
+import { CustomBlockSigns } from "@/components/Editor/DecorationComponents/CustomBlockSigns";
 
 const decorationRule: { component: Function; option: AzDecoratorOption; regex: RegExp }[] = [
   {
@@ -20,12 +21,26 @@ const decorationRule: { component: Function; option: AzDecoratorOption; regex: R
     option: { name: "escape" },
     regex: /\\./gu,
   },
-
+  {
+    component: CustomBlockSigns,
+    option: { name: "header-signs" },
+    regex: /^#{1,6} /gu,
+  },
+  {
+    component: CustomBlockSigns,
+    option: { name: "unordered-list-sign" },
+    regex: /^\+ */gu,
+  },
+  {
+    component: CustomBlockSigns,
+    option: { name: "ordered-list-sign" },
+    regex: /^\d\. */gu,
+  },
   {
     component: SetAlias,
     option: {
       name: "setHeaderAlias",
-      parentName: ["header-one", "header-two", "header-three", "header-four", "header-five"],
+      parentBlockType: ["header-one", "header-two", "header-three", "header-four", "header-five"],
     },
     regex: /\[.*\]/gu,
   },
@@ -173,6 +188,7 @@ const decorator: Array<AzDecorator> = decorationRule.map(rule => ({
 }));
 
 const callback = (decoratorRange: DecoratorRange[][], block: ContentBlock) => {
+  console.log("callback!!");
   store.dispatch(
     setDecorationMap({
       blockKey: block.getKey(),

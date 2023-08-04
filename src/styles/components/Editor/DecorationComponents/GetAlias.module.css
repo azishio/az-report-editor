@@ -1,8 +1,0 @@
-.wrapper {
-  color: blue;
-}
-.wrapper .content::before {
-  content: attr(data-content-text);
-}
-
-/*# sourceMappingURL=GetAlias.module.css.map */

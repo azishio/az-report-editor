@@ -1,44 +1,51 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SelectionState } from "draft-js";
-import { store } from "@/rudex/store";
 
-type MySelectionState = {
-  focusDecorationId: Set<number>;
-  isFocusBlock: (key: string) => boolean;
+type SelectionState = {
+  blocks: string[];
+  endOffset: number;
+  isCollapsed: boolean;
+  startOffset: number;
 };
 
-const initialState: MySelectionState = {
-  focusDecorationId: new Set(),
-  isFocusBlock: () => false,
+const initialState: SelectionState = {
+  blocks: [],
+  endOffset: 0,
+  isCollapsed: true,
+  startOffset: 0,
 };
-export const selectionSlice = createSlice({
+
+const selectionSlice = createSlice({
   initialState,
   name: "selection",
   reducers: {
-    setSelection: (state, action: PayloadAction<SelectionState>) => {
-      const selectionState = action.payload;
-      const focusKey = selectionState.getFocusKey();
+    setSelection: (
+      state,
+      action: PayloadAction<{
+        blockArr: string[];
+        endKey: string;
+        endOffset: number;
+        startKey: string;
+        startOffset: number;
+      }>
+    ) => {
+      const { blockArr, endKey, endOffset, startKey, startOffset } = action.payload;
 
-      state.isFocusBlock = (key: string) => focusKey === key;
+      const startBlockIndex = blockArr.indexOf(startKey);
+      const endBlockIndex = blockArr.indexOf(endKey);
 
-      const focusOffset = selectionState.getFocusOffset();
-
-      state.focusDecorationId.clear();
-
-      if (false) {
-        store
-          .getState()
-          .block.decorationMap.get(focusKey)!
-          .forEach(decorator =>
-            decorator.forEach(range => {
-              const { end, id, start } = range;
-
-              if (start <= focusOffset && focusOffset <= end) {
-                state.focusDecorationId.add(id);
-              }
-            })
-          );
+      const blocks: string[] = [];
+      for (let i = startBlockIndex; i <= endBlockIndex; i++) {
+        blocks.push(blockArr[i]);
       }
+
+      const isCollapsed = startOffset === endOffset && blocks.length === 1;
+
+      return {
+        blocks,
+        endOffset,
+        isCollapsed,
+        startOffset,
+      };
     },
   },
 });

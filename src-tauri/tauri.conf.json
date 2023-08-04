@@ -1,10 +1,10 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "npm run build ",
     "beforeDevCommand": "npm run dev",
     "devPath": "http://localhost:3000",
-    "distDir": "../.next"
+    "distDir": "../out"
   },
   "package": {
     "productName": "AzReportEditor",
@@ -12,7 +12,12 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": true,
+      "fs": {
+        "scope": [
+          "$APPDATA/**"
+        ]
+      }
     },
     "bundle": {
       "active": true,
@@ -29,7 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.azishio.dev",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -53,13 +58,21 @@
     "updater": {
       "active": false
     },
+    "systemTray": {
+      "menuOnLeftClick": false,
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "fileDropEnabled": false,
         "resizable": true,
+        "minWidth": 400,
+        "maxHeight": 500,
         "title": "AzReportEditor",
-        "width": 800
+        "decorations": false,
+        "transparent": true
       }
     ]
   }

@@ -1,37 +1,35 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type Category = "header" | "figure" | "table";
-export type Alias = {
-  [category in Category]: Map<string, string>;
+
+type AliasState = {
+  [category in Category]: { [alias: string]: string };
 };
 
-const initialState: Alias = {
-  figure: new Map(),
-  header: new Map(),
-  table: new Map(),
+const initialState: AliasState = {
+  figure: {},
+  header: {},
+  table: {},
 };
 
-export const aliasSlice = createSlice({
+const AliasSlice = createSlice({
   initialState,
   name: "alias",
   reducers: {
-    deleteAlias: (
-      state,
-      action: PayloadAction<{ blockKey: string; category: "header" | "figure" | "table" }>
-    ) => {
-      const { blockKey, category } = action.payload;
-      state[category].delete(blockKey);
+    deleteAlias: (state, action: PayloadAction<{ alias: string; category: Category }>) => {
+      const { alias, category } = action.payload;
+      delete state[category][alias];
     },
-    setAlias(
+
+    setAlias: (
       state,
-      action: PayloadAction<{ alias: string; blockKey: string; category: Category }>
-    ) {
-      const { alias, blockKey, category } = action.payload;
-      state[category].set(alias, blockKey);
+      action: PayloadAction<{ alias: string; category: Category; count: string }>
+    ) => {
+      const { alias, category, count } = action.payload;
+      state[category][alias] = count;
     },
   },
 });
 
-export const { deleteAlias, setAlias } = aliasSlice.actions;
-
-export const aliasReducer = aliasSlice.reducer;
+export const { deleteAlias, setAlias } = AliasSlice.actions;
+export const aliasReducer = AliasSlice.reducer;
